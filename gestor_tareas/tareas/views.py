@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from .forms import TareaForm
+from django.contrib import messages
 from .models import Tarea
 
 @login_required
@@ -13,7 +14,19 @@ def lista_tareas(request):
 @login_required
 def tarea_detail(request, tarea_id):
     tarea = get_object_or_404(Tarea, id=tarea_id, usuario=request.user)
-    return render(request, 'tarea_detail.html', {'tarea': tarea})
+    if request.method == 'POST':
+        form = TareaForm(request.POST, instance=tarea) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Tarea actualizada con éxito.")
+            return redirect('lista_tareas')
+    else:
+        form = TareaForm(instance=tarea) 
+    context = {
+        'tarea': tarea,
+        'form': form 
+    }
+    return render(request, 'tarea_detail.html', context)
 
 @login_required
 def crear_tarea(request):

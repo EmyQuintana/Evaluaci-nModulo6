@@ -1,28 +1,36 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ tarea.titulo }} - Gestor de Tareas{% endblock %}
+{% block title %}Editar: {{ tarea.titulo }} - Gestor de Tareas{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    {% if tarea %}
-        <div class="card">
-            <div class="card-header">
-                <h2>{{ tarea.titulo }}</h2>
-            </div>
-            <div class="card-body">
-                <p class="card-text">{{ tarea.descripcion }}</p>
-            </div>
-            <div class="card-footer text-muted">
-                <p><b>Creador:</b> {{ tarea.usuario.username }}</p>
-                <p><b>Creada en:</b> {{ tarea.creada_en }}</p>
-                <p><b>Completada:</b> {% if tarea.completada %}Sí{% else %}No{% endif %}</p>
-            </div>
-        </div>
-        <a href="{% url 'lista_tareas' %}" class="btn btn-secondary mt-3">Volver a la lista</a>
-    {% else %}
-        <div class="alert alert-warning" role="alert">
-            La tarea que buscas no existe o no tienes permiso para verla.
-        </div>
+    <h2 class="mb-4">Editar Tarea: {{ tarea.titulo }}</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endfor %}
     {% endif %}
+
+    <div class="card p-4 shadow-sm">
+        <form method="post">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-success btn-lg me-2">Guardar Cambios</button>
+            <a href="{% url 'lista_tareas' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+            
+            <a href="{% url 'eliminar_tarea' tarea.id %}" class="btn btn-outline-danger btn-lg float-end">Eliminar</a>
+        </form>
+    </div>
 </div>
 {% endblock %}

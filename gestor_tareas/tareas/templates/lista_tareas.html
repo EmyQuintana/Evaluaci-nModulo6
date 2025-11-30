@@ -10,10 +10,14 @@
         <div class="list-group">
             {% for tarea in tareas %}
                 <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    
                     <a href="{% url 'tarea_detail' tarea.id %}" class="text-decoration-none text-dark flex-grow-1">
                         <h5 class="mb-1 {% if tarea.completada %}text-decoration-line-through{% endif %}">{{ tarea.titulo }}</h5>
                     </a>
+                    
                     <div>
+                        <a href="{% url 'tarea_detail' tarea.id %}" class="btn btn-info btn-sm me-2">Editar</a>
+                        
                         <a href="{% url 'completar_tarea' tarea.id %}" class="btn btn-success btn-sm me-2 {% if tarea.completada %}disabled{% endif %}">Completar</a>
                         <a href="{% url 'eliminar_tarea' tarea.id %}" class="btn btn-danger btn-sm">Eliminar</a>
                     </div>
