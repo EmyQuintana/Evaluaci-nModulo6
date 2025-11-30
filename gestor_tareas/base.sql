@@ -1,0 +1,1 @@
+CREATE DATABASE gestor_tareas_db;
